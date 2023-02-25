@@ -3,10 +3,9 @@ import sys
 import random
 
 pygame.init()
-screenWidth = 800
-screenHeight = 600
+screenSize = 800
 font = pygame.font.SysFont("Arial", 36)
-screen = pygame.display.set_mode((screenWidth,screenHeight))
+screen = pygame.display.set_mode((screenSize,screenSize))
 
 f = open("highscore.txt","r")
 tempf = f.readlines()
@@ -16,11 +15,13 @@ score = 0
 
 player = pygame.Surface((50,50))
 player.fill((170,0,170))
+playerx = 0
+playery = 0
 
 enemy = pygame.Surface((50,50))
 enemy.fill((170,0,0))
-enemyx = 50*random.randint(1, 15) - 25
-enemyy = 50*random.randint(1, 11) - 25
+enemyx = 50*random.randint(1, 15)
+enemyy = 50*random.randint(1, 11)
 
 movex = 0
 movey = 0
@@ -49,13 +50,13 @@ while True:
             pygame.quit()
             sys.exit()
 
-    playerx = screenWidth/2 -25 + movex
-    playery = screenHeight/2 -25 + movey
+    playerx = screenSize/2 + movex
+    playery = screenSize/2 + movey
 
     scoreplus = True
     while enemyx-50<playerx<enemyx+50 and enemyy-50<playery<enemyy+50:
-        enemyx = 50*random.randint(1, 15) - 25
-        enemyy = 50*random.randint(1, 11) - 25
+        enemyx = 50*random.randint(0, (screenSize/50)-1)
+        enemyy = 50*random.randint(0, (screenSize/50)-1)
         if scoreplus == True:
             score += 1
             if score > int(highscore):
