@@ -26,6 +26,7 @@ enemyy = 50*random.randint(1, 11)
 movex = 0
 movey = 0
 
+
 while True:
     events = pygame.event.get()
 
@@ -43,9 +44,6 @@ while True:
             elif event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
-            elif event.key == pygame.K_z:
-                print("Player x =", playerx,"player y =",playery)
-                print("Enemy x =", enemyx,"enemy y =",enemyy)
         elif event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
@@ -66,8 +64,8 @@ while True:
 
             scoreplus = False
 
-    txtsurf = font.render("Your score is: "+str(score)+", high score is: "+str(highscore) , True, (255,255,255))
-    screen.blit(txtsurf,(20,15))
+    text = font.render("Your score is: "+str(score)+", high score is: "+str(highscore) , True, (255,255,255))
+    screen.blit(text,(20,15))
 
     screen.blit(player,(playerx, playery)) #player drawn
     screen.blit(enemy,(enemyx, enemyy))
