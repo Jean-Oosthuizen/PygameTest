@@ -1,7 +1,7 @@
 import pygame
 
 class player():
-    def __init__(self,colour,name,health,coordinates,size):
+    def __init__(self,colour,health,coordinates,size):
         self.colour = colour
         self.health = health
         self.coordinates = coordinates
@@ -34,9 +34,9 @@ pygame.init()
 screen = pygame.display.set_mode((500,500))
 
 level = [["a","b"],["b","a"]]
-p1 = player((0,200,0), "Jean", 100, (50,20), (50,50))
-print(p1)
 
+p1 = player((0,200,0), 100, (50,20), (50,50))
+print(p1)
 
 while True:
     screen.fill((0,0,0))
