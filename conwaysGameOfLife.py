@@ -10,6 +10,7 @@ class cell():
     def __str__(self):
         return f"This object has a colour of {self.colour}. It is at coordinates: {self.coordinates}"
 def drawScreen():
+    screen.fill((0,0,0))
     for row in range(0,len(level)):
         for column in range(0,len(level[0])):
             if level[row][column] == "a":
@@ -36,6 +37,7 @@ def eventHandler():
                 level[y][x] = "b"
             else:
                 level[y][x] = "a"
+            pygame.mixer.Sound.play(click)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
@@ -53,10 +55,13 @@ cellSize = 50
 cellA = cell((40,40,40),(0,0),(48))
 cellB = cell((255,255,255),(0,0),(48))
 
+click = pygame.mixer.Sound("click.wav")
+
 level = [["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],]
-screen.fill((0,0,0))
+
 
 while True:
+
     drawScreen()
     events = pygame.event.get()
     eventHandler()
