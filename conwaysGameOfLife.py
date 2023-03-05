@@ -96,7 +96,7 @@ def createLevel(loops):
 
 #main
 pygame.init()
-screenSize = 100
+screenSize = 500
 cellSize = 20
 tickSpeed = 0.1
 cellCount = screenSize//cellSize
