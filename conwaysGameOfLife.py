@@ -53,16 +53,18 @@ def eventHandler():
             sys.exit()
 def nextGeneration():
     nextFrame = []
-    for row in range(len(level)):
+    for row in range(cellCount):
         nextRow = []
-        for column in range(len(level[0])):
+        for column in range(cellCount):
             #we have selected a tile to evaluate
             bCount = 0
             cell = level[row][column]
             for i in range(1,4):
                 for j in range(1,4):
                     try:
-                        if i == 2 and j ==2:
+                        if row+2-i < 0 or column+2-j < 0:
+                            pass
+                        elif i == 2 and j ==2:
                             pass
                         elif level[row+2-i][column+2-j] == "b":
                             bCount += 1
@@ -81,24 +83,37 @@ def nextGeneration():
                 nextRow.append(level[row][column])
         nextFrame.append(nextRow)
     return nextFrame
+def createLevel(loops):
+    level = []
+    for i in range(loops):
+        row = []
+        for j in range(loops):
+            row.append("a")
+        level.append(row)
+    return level
 
+
+
+#main
 pygame.init()
-screenSize = 500
+screenSize = 100
+cellSize = 20
+tickSpeed = 0.1
+cellCount = screenSize//cellSize
+
 screen = pygame.display.set_mode((screenSize,screenSize))
-
-cellSize = 50
-cellA = cell((40,40,40),(0,0),(48))
-cellB = cell((255,255,255),(0,0),(48))
-
 click = pygame.mixer.Sound("click.wav")
 
-level = [["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a"],]
+cellA = cell((40,40,40),(0,0),(cellSize - 1))
+cellB = cell((255,255,255),(0,0),(cellSize -1))
+
+level = createLevel(cellCount)
 
 ready = False
 while True:
     if ready == True:
         level = nextGeneration()
-        time.sleep(0.2)
+        time.sleep(tickSpeed)
     drawScreen()
     events = pygame.event.get()
     eventHandler()
