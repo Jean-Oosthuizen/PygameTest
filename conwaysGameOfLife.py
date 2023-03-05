@@ -1,6 +1,6 @@
 import pygame, sys, time
 
-class cell():
+class tile():
     def __init__(self,colour,coordinates,size):
         self.colour = colour
         self.coordinates = coordinates
@@ -13,12 +13,12 @@ def drawScreen():
         for column in range(len(level[0])):
             if level[row][column] == "d":
                 screen.blit(cellD.name,(column*cellSize + 1, row*cellSize + 1))
-            if level[row][column] == "a":
+            else:
                 screen.blit(cellA.name,(column*cellSize + 1, row*cellSize + 1))
 def eventHandler():
-    global ready
+    global active
     for event in events:
-        if event.type == pygame.MOUSEBUTTONDOWN and ready == False:
+        if event.type == pygame.MOUSEBUTTONDOWN and active == False: #life isn't active and you've clicked
             pos = pygame.mouse.get_pos()
             x = -1
             y = -1
@@ -37,50 +37,55 @@ def eventHandler():
             else:
                 level[y][x] = "d"
             pygame.mixer.Sound.play(click)
+
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                if ready == False:
-                    ready = True
+                if active == False:
+                    active = True
                 else:
-                    ready = False
-            elif event.key == pygame.K_c and ready == False:
+                    active = False
+            elif event.key == pygame.K_c and active == False: #life isn't active and you clear the screen
                 clearLevel()
             elif event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
+
         elif event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+    drawScreen()
+    pygame.display.update()
 def nextGeneration():
     nextFrame = []
     for row in range(cellCount):
         nextRow = []
         for column in range(cellCount):
             #we have selected a tile to evaluate
-            aCount = 0
-            cell = level[row][column]
+            aCount = 0 #counts the number of living tiles surrounding our selected tile
+            tile = level[row][column]
             for i in range(1,4):
                 for j in range(1,4):
                     try:
                         if row+2-i < 0 or column+2-j < 0: #if the function is checking a negative array index, which would be on the opposite side of the level
                             pass
-                        elif i == 2 and j ==2: #if the function is checking the tile
+                        elif i == 2 and j ==2: #if the function is checking the tile being evaluated
                             pass
-                        elif level[row+2-i][column+2-j] == "a":
+                        elif level[row+2-i][column+2-j] == "a": 
                             aCount += 1
-                    except:
+                    except: #array index is out of range, which means this is a tile at the edge of the screen and it's trying to check a tile outside the screen
                         pass
-            if cell == "a" and aCount in [2,3]:# d = dead, a = alive
-                #The cell is alive and will stay alive
+            #d = dead, a = alive
+            if tile == "a" and aCount in [2,3]:
+                #The tile is alive and will stay alive
                 nextRow.append("a")
-            elif cell == "a" and aCount not in [2,3]:
-                #The cell is alive but will die
+            elif tile == "a" and aCount not in [2,3]:
+                #The tile is alive but will die
                 nextRow.append("d")
-            elif cell == "d" and aCount == 3:
-                #The cell is dead but will come alive
+            elif tile == "d" and aCount == 3:
+                #The tile is dead but will come alive
                 nextRow.append("a")
             else:
-                #the cell is dead and will stay dead
+                #the tile is dead and will stay dead
                 nextRow.append(level[row][column])
         nextFrame.append(nextRow)
     return nextFrame
@@ -108,20 +113,24 @@ screen = pygame.display.set_mode((screenSize,screenSize))
 click = pygame.mixer.Sound("click.wav")
 
 #D = dead, A = alive
-cellD = cell((40,40,40),(0,0),(cellSize - 1))
-cellA = cell((255,255,255),(0,0),(cellSize -1))
+cellD = tile((40,40,40),(0,0),(cellSize - 1))
+cellA = tile((255,255,255),(0,0),(cellSize -1))
 generationTimer = 1
 level = createLevel(cellCount)
 
-ready = False
+active = False
+drawScreen()
+pygame.display.update()
+
 while True:
-    if ready == True:
+    if active == True: #if life is active after spacebar has been pressed
         generationTimer+=1
         if generationTimer >= 3:
             generationTimer = 0
             level = nextGeneration()
-    drawScreen()
+            drawScreen()
+            pygame.display.update()
+    
     events = pygame.event.get()
     eventHandler()
     clock.tick(60)
-    pygame.display.update()
